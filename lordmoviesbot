@@ -1,20 +1,25 @@
 import requests
-import json
 import telegram
 # Create a Telegram bot
 bot = telegram.Bot(token='5850612194:AAFwIiZc5ZZ0G0MZYNXSqp0pF1kLBjFz4TM')
-# Define the function to handle incoming messages
-def handle_message(message):
-    # Get the movie title from the message
-    movie_title = message.text
-    # Search for the movie on a movie database API
-    response = requests.get('https://api.themoviedb.org/3/search/movie?api_key=c8bfd98c8b4b815f02f3377fe0ee73d6&query={}'.format(movie_title))
-    results = json.loads(response.content)
-    # Get the first movie result
+# Define the function to search for movies
+def search_movies(movie_name):
+    # Make a request to the movie database API
+    response = requests.get('https://api.themoviedb.org/3/search/movie', params={'api_key': 'c8bfd98c8b4b815f02f3377fe0ee73d6', 'query': movie_name})
+    # Parse the response
+    results = response.json()
+    # Get the first result
     movie = results['results'][0]
-    # Get the movie download link
-    download_link = 'https://www.example.com/download/{}'.format(movie['id'])
-    # Send the download link to the user
-    bot.send_message(message.chat_id, download_link)
-# Start the Telegram bot
-bot.start_polling(handle_message)
+    # Return the movie's download link
+    return movie['download_link']
+# Define the function to send a message to the user
+def send_message(chat_id, message):
+    # Send the message
+    bot.send_message(chat_id=chat_id, text=message)
+# Get the message from the user
+message = bot.get_updates()[-1].message.text
+# Search for the movie
+movie_name = message.text
+download_link = search_movies(movie_name)
+# Send the download link to the user
+send_message(message.chat_id, download_link)
