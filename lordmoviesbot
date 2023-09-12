@@ -5,13 +5,13 @@ bot = telegram.Bot(token='5850612194:AAFwIiZc5ZZ0G0MZYNXSqp0pF1kLBjFz4TM')
 # Define the function to search for movies
 def search_movies(movie_name):
     # Make a request to the movie database API
-    response = requests.get('https://api.themoviedb.org/3/search/movie', params={'api_key': 'c8bfd98c8b4b815f02f3377fe0ee73d6', 'query': movie_name})
+    response = requests.get('http://www.omdbapi.com/', params={'apikey': 'http://www.omdbapi.com/?i=tt3896198&apikey=47351199', 't': movie_name})
     # Parse the response
     results = response.json()
     # Get the first result
-    movie = results['results'][0]
+    movie = results
     # Return the movie's download link
-    return movie['download_link']
+    return movie['Download']
 # Define the function to send a message to the user
 def send_message(chat_id, message):
     # Send the message
